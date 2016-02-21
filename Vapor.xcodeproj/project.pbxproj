@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		3492B2EF1C787DD600D8E588 /* RouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3492B2EE1C787DD600D8E588 /* RouteTests.swift */; };
 		802030011C77C956009B8655 /* Vapor+Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802030001C77C956009B8655 /* Vapor+Json.swift */; };
+		802030121C78CAC2009B8655 /* Branch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802030101C78CAC2009B8655 /* Branch.swift */; };
+		802030131C78CAC2009B8655 /* Branch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802030101C78CAC2009B8655 /* Branch.swift */; };
+		802030171C78CAE1009B8655 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802030161C78CAE1009B8655 /* Router.swift */; };
+		802030181C78CAE1009B8655 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802030161C78CAE1009B8655 /* Router.swift */; };
 		C304C8A71C62D65200058C92 /* ServerDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304C8A61C62D65200058C92 /* ServerDriver.swift */; };
 		C304C8A81C62D65200058C92 /* ServerDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304C8A61C62D65200058C92 /* ServerDriver.swift */; };
 		C304C8AA1C62FCA300058C92 /* RequestFormExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C304C8A91C62FCA300058C92 /* RequestFormExtension.swift */; };
@@ -31,10 +35,6 @@
 		C352E6F61C62BC6A00E26467 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DA1C62BC6A00E26467 /* Response.swift */; };
 		C352E6F71C62BC6A00E26467 /* ResponseConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DB1C62BC6A00E26467 /* ResponseConvertible.swift */; };
 		C352E6F81C62BC6A00E26467 /* ResponseConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DB1C62BC6A00E26467 /* ResponseConvertible.swift */; };
-		C352E6F91C62BC6A00E26467 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DC1C62BC6A00E26467 /* Route.swift */; };
-		C352E6FA1C62BC6A00E26467 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DC1C62BC6A00E26467 /* Route.swift */; };
-		C352E6FB1C62BC6A00E26467 /* NodeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DD1C62BC6A00E26467 /* NodeRouter.swift */; };
-		C352E6FC1C62BC6A00E26467 /* NodeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DD1C62BC6A00E26467 /* NodeRouter.swift */; };
 		C352E6FD1C62BC6A00E26467 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DE1C62BC6A00E26467 /* Server.swift */; };
 		C352E6FE1C62BC6A00E26467 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DE1C62BC6A00E26467 /* Server.swift */; };
 		C352E6FF1C62BC6A00E26467 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C352E6DF1C62BC6A00E26467 /* Session.swift */; };
@@ -78,6 +78,8 @@
 /* Begin PBXFileReference section */
 		3492B2EE1C787DD600D8E588 /* RouteTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTests.swift; sourceTree = "<group>"; };
 		802030001C77C956009B8655 /* Vapor+Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Vapor+Json.swift"; sourceTree = "<group>"; };
+		802030101C78CAC2009B8655 /* Branch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branch.swift; sourceTree = "<group>"; };
+		802030161C78CAE1009B8655 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		C304C8A01C62C3F400058C92 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		C304C8A61C62D65200058C92 /* ServerDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDriver.swift; sourceTree = "<group>"; };
 		C304C8A91C62FCA300058C92 /* RequestFormExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestFormExtension.swift; sourceTree = "<group>"; };
@@ -93,8 +95,6 @@
 		C352E6D91C62BC6A00E26467 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		C352E6DA1C62BC6A00E26467 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		C352E6DB1C62BC6A00E26467 /* ResponseConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseConvertible.swift; sourceTree = "<group>"; };
-		C352E6DC1C62BC6A00E26467 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
-		C352E6DD1C62BC6A00E26467 /* NodeRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeRouter.swift; sourceTree = "<group>"; };
 		C352E6DE1C62BC6A00E26467 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		C352E6DF1C62BC6A00E26467 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		C352E6E01C62BC6A00E26467 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
@@ -204,8 +204,8 @@
 			isa = PBXGroup;
 			children = (
 				C352E6D31C62BC6A00E26467 /* Controller.swift */,
-				C352E6DC1C62BC6A00E26467 /* Route.swift */,
-				C352E6DD1C62BC6A00E26467 /* NodeRouter.swift */,
+				802030101C78CAC2009B8655 /* Branch.swift */,
+				802030161C78CAE1009B8655 /* Router.swift */,
 				C304C8B41C6306B100058C92 /* RouterDriver.swift */,
 			);
 			name = Routing;
@@ -417,13 +417,11 @@
 				C3EDEA7D1C683CE100754727 /* SessionMiddleware.swift in Sources */,
 				C304C8AA1C62FCA300058C92 /* RequestFormExtension.swift in Sources */,
 				C352E6F31C62BC6A00E26467 /* Request.swift in Sources */,
-				C352E6F91C62BC6A00E26467 /* Route.swift in Sources */,
 				C304C8B51C6306B100058C92 /* RouterDriver.swift in Sources */,
 				C3EDEA871C68459300754727 /* Hash.swift in Sources */,
 				C352E7091C62BC6A00E26467 /* View.swift in Sources */,
 				C352E6EF1C62BC6A00E26467 /* MemorySessionDriver.swift in Sources */,
 				C377F2EF1C696CAB00DABD21 /* RenderDriver.swift in Sources */,
-				C352E6FB1C62BC6A00E26467 /* NodeRouter.swift in Sources */,
 				C352E6F51C62BC6A00E26467 /* Response.swift in Sources */,
 				C352E6E91C62BC6A00E26467 /* JSONSerializer.swift in Sources */,
 				802030011C77C956009B8655 /* Vapor+Json.swift in Sources */,
@@ -431,10 +429,12 @@
 				C352E6E71C62BC6A00E26467 /* Controller.swift in Sources */,
 				C304C8A71C62D65200058C92 /* ServerDriver.swift in Sources */,
 				C352E6F71C62BC6A00E26467 /* ResponseConvertible.swift in Sources */,
+				802030121C78CAC2009B8655 /* Branch.swift in Sources */,
 				C352E7031C62BC6A00E26467 /* SocketServer.swift in Sources */,
 				C3EDEA801C68419800754727 /* String+SHA1.swift in Sources */,
 				C3EDEA7B1C683A6C00754727 /* Middleware.swift in Sources */,
 				C352E6FD1C62BC6A00E26467 /* Server.swift in Sources */,
+				802030171C78CAE1009B8655 /* Router.swift in Sources */,
 				C3EDEA841C6842C700754727 /* Int+Random.swift in Sources */,
 				C352E6F11C62BC6A00E26467 /* SocketParser.swift in Sources */,
 				C352E7051C62BC6A00E26467 /* StringExtensions.swift in Sources */,
@@ -459,20 +459,20 @@
 				C352E6F61C62BC6A00E26467 /* Response.swift in Sources */,
 				C3943DC31C7663E80014F4EE /* RouterTests.swift in Sources */,
 				C3EDEA851C6842C700754727 /* Int+Random.swift in Sources */,
+				802030131C78CAC2009B8655 /* Branch.swift in Sources */,
 				C352E6F21C62BC6A00E26467 /* SocketParser.swift in Sources */,
 				C304C8AB1C62FCA300058C92 /* RequestFormExtension.swift in Sources */,
 				C304C8A81C62D65200058C92 /* ServerDriver.swift in Sources */,
 				C352E70A1C62BC6A00E26467 /* View.swift in Sources */,
 				C352E7061C62BC6A00E26467 /* StringExtensions.swift in Sources */,
 				C377F2F01C696CAB00DABD21 /* RenderDriver.swift in Sources */,
-				C352E6FA1C62BC6A00E26467 /* Route.swift in Sources */,
+				802030181C78CAE1009B8655 /* Router.swift in Sources */,
 				C352E6F41C62BC6A00E26467 /* Request.swift in Sources */,
 				C352E7041C62BC6A00E26467 /* SocketServer.swift in Sources */,
 				C3EDEA881C68459300754727 /* Hash.swift in Sources */,
 				C3943DC51C7664D90014F4EE /* SessionMiddleware.swift in Sources */,
 				C3EDEA811C68419800754727 /* String+SHA1.swift in Sources */,
 				C352E6EA1C62BC6A00E26467 /* JSONSerializer.swift in Sources */,
-				C352E6FC1C62BC6A00E26467 /* NodeRouter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

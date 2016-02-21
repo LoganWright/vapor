@@ -60,9 +60,9 @@ public class Server {
         Initialize the `Server` with a custom
         `ServerDriver`
     */
-    public init(driver: ServerDriver) {
+    public init(driver: ServerDriver, router: RouterDriver = Route) {
         self.driver = driver
-        self.router = NodeRouter()
+        self.router = router
         
         self.middleware = [
             SessionMiddleware()
@@ -72,34 +72,10 @@ public class Server {
     }
 
     /**
-        Registers all routes from the `Route` interface
-        into the current `RouterDriver`.
-    */
-    func registerRoutes() {
-        for route in Route.routes {
-            self.router.register(hostname: route.hostname, method: route.method, path: route.path) { request in
-
-                let response: Response
-                do {
-                    response = try route.closure(request: request).response()
-                } catch View.Error.InvalidPath {
-                    response = Response(status: .NotFound, text: "View not found")
-                } catch {
-                    response = Response(error: "Server Error: \(error)")
-                }
-
-                return response
-            }
-        }
-    }
-
-    /**
         Boots the chosen `ServerDriver` and
         runs on the supplied port.
     */
     public func run(port inPort: Int = 80) {
-        self.registerRoutes()
-
         var port = inPort
 
         //grab process args
@@ -151,7 +127,18 @@ extension Server: ServerDriverDelegate {
         
         //check in routes
         if let routerHandler = router.route(request) {
-            handler = routerHandler
+            handler = { req in
+                let response: Response
+                do {
+                    response = try routerHandler(req).response()
+                } catch View.Error.InvalidPath {
+                    response = Response(status: .NotFound, text: "View not found")
+                } catch {
+                    response = Response(error: "Server Error: \(error)")
+                }
+                
+                return response
+            }
         } else {
             //check in file system
             let filePath = Server.workDir + "Public" + request.path
