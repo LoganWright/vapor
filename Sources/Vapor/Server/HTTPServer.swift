@@ -60,6 +60,12 @@ final class HTTPServer: ServerDriver {
                 let response = try responder.respond(to: request)
                 let data = serializer.serialize(response, keepAlive: keepAlive)
                 try stream.send(data)
+
+                // Optional chaining only runs on connection requests
+                try response.webSocketConnection?(stream)
+//                if let webSocketConnection = response.webSocketConnection {
+//                    webSocketConnection(stream)
+//                }
             } catch let e as SocksCore.Error where e.isClosedByPeer {
                 break // jumpto close
             } catch let e as HTTPParser.Error where e == .bufferEmpty {
@@ -77,6 +83,24 @@ final class HTTPServer: ServerDriver {
         }
     }
 
+}
+
+extension Response {
+    public typealias WebSocketConnection = ((Stream) throws -> Void)
+
+    public var webSocketConnection: WebSocketConnection? {
+        get {
+            return storage["vapor:webSocketConnection"] as? WebSocketConnection
+        }
+        set {
+            storage["vapor:webSocketConnection"] = newValue
+        }
+    }
+
+    var upgradeToSockets: Bool {
+        // TODO: Placeholder
+        return false
+    }
 }
 
 extension Request {
