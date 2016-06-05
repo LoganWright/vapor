@@ -4,9 +4,8 @@
     import Darwin
 #endif
 
-import Socks
-import SocksCore
 import Strand
+import SocksCore
 
 // MARK: Byte => Character
 extension Character {
@@ -16,27 +15,24 @@ extension Character {
     }
 }
 
-final class HTTPServer: ServerDriver {
-    var stream: SynchronousTCPServer
+final class StreamServer<
+    Server: StreamDriver,
+    Parser: StreamParser,
+    Serializer: StreamSerializer
+>: ServerDriver {
+    var server: Server
     var responder: Responder
-    var parser: HTTPParser.Type
-    var serializer: HTTPSerializer
 
     required init(host: String, port: Int, responder: Responder) throws {
-        let port = Port.portNumber(UInt16(port))
-        let address = InternetAddress(hostname: host, port: port)
-
-        stream = try SynchronousTCPServer(address: address)
-        parser = HTTPParser.self
-        serializer = HTTPSerializer()
+        server = try Server.make(host: host, port: port)
         self.responder = responder
     }
 
     func start() throws {
         do {
-            try stream.startWithHandler(handler: handle)
+            try server.start(handler: handle)
         } catch {
-            Log.error("Failed to accept: \(stream) error: \(error)")
+            Log.error("Failed to start: \(error)")
         }
     }
 
@@ -53,26 +49,30 @@ final class HTTPServer: ServerDriver {
     private func parse(_ stream: Stream) {
         var keepAlive = false
         repeat {
-            let parser = HTTPParser(stream: stream)
+            let parser = Parser(stream: stream)
+            let serializer = Serializer(stream: stream)
             do {
                 let request = try parser.parse()
                 keepAlive = request.keepAlive
                 let response = try responder.respond(to: request)
-                let data = serializer.serialize(response, keepAlive: keepAlive)
-                try stream.send(data)
-
-                // Optional chaining only runs on connection requests
+//<<<<<<< HEAD:Sources/Vapor/Server/HTTPServer.swift
+//                let data = serializer.serialize(response, keepAlive: keepAlive)
+//                try stream.send(data)
+//
+//                // Optional chaining only runs on connection requests
+////                if let webSocketConnection = response.webSocketConnection {
+////                    webSocketConnection(stream)
+////                }
+//=======
+                try serializer.serialize(response)
                 try response.webSocketConnection?(stream)
-//                if let webSocketConnection = response.webSocketConnection {
-//                    webSocketConnection(stream)
-//                }
             } catch let e as SocksCore.Error where e.isClosedByPeer {
                 break // jumpto close
-            } catch let e as HTTPParser.Error where e == .bufferEmpty {
+            } catch let e as HTTPParser.Error where e == .streamEmpty {
                 break // jumpto close
             } catch {
                 Log.error("HTTP error: \(error)")
-                break
+                break //break to close stream on all errors
             }
         } while keepAlive && !stream.closed
 
@@ -103,19 +103,19 @@ extension Response {
     }
 }
 
+extension SocksCore.Error {
+    var isClosedByPeer: Bool {
+        guard case .ReadFailed = type else { return false }
+        let message = String(validatingUTF8: strerror(errno))
+        return message == "Connection reset by peer"
+    }
+}
+
 extension Request {
     var keepAlive: Bool {
         // HTTP 1.1 defaults to true unless explicitly passed `Connection: close`
         guard let value = headers["Connection"] else { return true }
         // TODO: Decide on if 'contains' is better, test linux version
         return !(value.trim() == "close")
-    }
-}
-
-extension SocksCore.Error {
-    var isClosedByPeer: Bool {
-        guard case .ReadFailed = type else { return false }
-        let message = String(validatingUTF8: strerror(errno))
-        return message == "Connection reset by peer"
     }
 }
