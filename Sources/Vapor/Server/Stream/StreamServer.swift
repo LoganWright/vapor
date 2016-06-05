@@ -55,15 +55,6 @@ final class StreamServer<
                 let request = try parser.parse()
                 keepAlive = request.keepAlive
                 let response = try responder.respond(to: request)
-//<<<<<<< HEAD:Sources/Vapor/Server/HTTPServer.swift
-//                let data = serializer.serialize(response, keepAlive: keepAlive)
-//                try stream.send(data)
-//
-//                // Optional chaining only runs on connection requests
-////                if let webSocketConnection = response.webSocketConnection {
-////                    webSocketConnection(stream)
-////                }
-//=======
                 try serializer.serialize(response)
                 try response.webSocketConnection?(stream)
             } catch let e as SocksCore.Error where e.isClosedByPeer {
