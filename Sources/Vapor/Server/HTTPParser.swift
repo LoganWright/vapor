@@ -1,3 +1,4 @@
+
 extension HTTPParser {
     enum Error: ErrorProtocol {
         case bufferEmpty
@@ -11,20 +12,10 @@ final class HTTPParser {
     static let carriageReturn: Byte = 13
     static let minimumValidAsciiCharacter: Byte = 13 + 1
 
-    var stream: Stream
-    var iterator: IndexingIterator<[Byte]>
+    let buffer: StreamBuffer
 
     init(stream: Stream) {
-        self.stream = stream
-        self.iterator = Data().makeIterator()
-    }
-
-    func next() throws -> Byte? {
-        guard let next = iterator.next() else {
-            iterator = try stream.receive(upTo: 2048).makeIterator()
-            return iterator.next()
-        }
-        return next
+        self.buffer = StreamBuffer(stream: stream, buffer: 1024)
     }
 
     func nextLine() throws -> String {
@@ -38,24 +29,11 @@ final class HTTPParser {
             line.append(Character(byte))
         }
 
-        while let byte = try next() where byte != HTTPParser.newLine {
+        while let byte = try buffer.next() where byte != HTTPParser.newLine {
             append(byte: byte)
         }
         
         return line
-    }
-
-    func chunk(size: Int) throws -> [Byte] {
-        var bytes = [Byte].init(repeating: 0, count: size)
-        bytes += Array(iterator)
-        iterator = Data().makeIterator()
-
-        while bytes.count < size {
-            let next = try stream.receive(upTo: 2048)
-            bytes.append(contentsOf: next)
-        }
-
-        return bytes
     }
 
     func parse() throws -> Request {
@@ -83,11 +61,11 @@ final class HTTPParser {
             headers[CaseInsensitiveString(comps[0])] = comps[1]
         }
 
-        let buffer: Data
+        let bytes: Data
         if let contentLength = headers["content-length"]?.int {
-            buffer = Data(try chunk(size: contentLength))
+            bytes = Data(try buffer.chunk(size: contentLength))
         } else {
-            buffer = []
+            bytes = []
         }
 
         return Request(
@@ -95,21 +73,67 @@ final class HTTPParser {
             uri: requestLine.uri,
             version: requestLine.version,
             headers: Request.Headers(headers),
-            body: .buffer(buffer)
+            body: .buffer(bytes)
         )
     }
 }
 
+public final class StreamBuffer {
+    private let backingStream: Stream
+    private let buffer: Int
 
-extension Data {
-    var nextLine: String? {
-        var bytes: [Byte] = []
+    private var iterator: IndexingIterator<[Byte]>
 
-        var it = makeIterator()
-        while let byte = it.next() where byte != HTTPParser.newLine {
-            bytes.append(byte)
+    public init(stream: Stream, buffer: Int = 1024) {
+        self.backingStream = stream
+        self.buffer = buffer
+        self.iterator = Data().makeIterator()
+    }
+
+    public func next() throws -> Byte? {
+        guard let next = iterator.next() else {
+            iterator = try backingStream.receive(upTo: buffer).makeIterator()
+            return iterator.next()
         }
+        return next
+    }
 
-        return String(bytes)
+    public func chunk(size: Int) throws -> [Byte] {
+        var count = 0
+        var bytes = [Byte].init(repeating: 0, count: size)
+        while count < size, let byte = try next() {
+            bytes[count] = byte
+            count += 1
+        }
+        return bytes
+    }
+}
+
+import C7
+
+extension StreamBuffer: Stream {}
+
+extension StreamBuffer: C7.Closable {
+    public var closed: Bool {
+        return backingStream.closed
+    }
+    public func close() throws {
+        try backingStream.close()
+    }
+}
+
+extension StreamBuffer: Sending {
+    public func send(_ data: Data, timingOut deadline: Double) throws {
+        try backingStream.send(data, timingOut: deadline)
+    }
+
+    public func flush(timingOut deadline: Double) throws {
+        try backingStream.flush(timingOut: deadline)
+    }
+}
+
+extension StreamBuffer: Receiving {
+    public func receive(upTo byteCount: Int, timingOut deadline: Double) throws -> Data {
+        return try Data(chunk(size: byteCount))
     }
 }
