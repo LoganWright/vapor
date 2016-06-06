@@ -76,19 +76,6 @@ final class StreamServer<
 
 }
 
-extension Response {
-    public typealias AfterResponseSerialization = ((Stream) throws -> Void)
-
-    public var afterResponseSerialization: AfterResponseSerialization? {
-        get {
-            return storage["vapor:afterResponseSerialization"] as? AfterResponseSerialization
-        }
-        set {
-            storage["vapor:afterResponseSerialization"] = newValue
-        }
-    }
-}
-
 extension SocksCore.Error {
     var isClosedByPeer: Bool {
         guard case .ReadFailed = type else { return false }
