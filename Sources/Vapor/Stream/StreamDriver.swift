@@ -3,8 +3,6 @@ public protocol StreamDriver {
 }
 
 import Foundation
-func test() {
-}
 
 /*
  public protocol Stream: class {
@@ -61,8 +59,6 @@ public final class FoundationStream: NSObject, Stream, NSStreamDelegate {
         return buffer.prefix(read).array
     }
 
-
-
     let backingInputStream: NSInputStream
     let backingOutputStream: NSOutputStream
 
@@ -90,25 +86,18 @@ public final class FoundationStream: NSObject, Stream, NSStreamDelegate {
 }
 
 extension FoundationStream: ClientStream {
-    public static func makeConnection(host: String, port: Int) throws -> Stream {
-        return try FoundationStream(host: host, port: port)
+    public static func makeConnection(host: String, port: Int, usingSSL: Bool) throws -> Stream {
+        let stream = try FoundationStream(host: host, port: port)
+        if usingSSL {
+            _ = stream.backingOutputStream.upgradeSSL()
+            _ = stream.backingInputStream.upgradeSSL()
+        }
+        return stream
     }
 }
 
-public final class FoundationStreamDriver {
-        public static func listen(host: String, port: Int, handler: (Stream) throws -> ()) throws {
-//            let port = UInt16(port)
-//            let address = InternetAddress(hostname: host, port: port)
-//            let server = try SynchronousTCPServer(address: address)
-//            try server.startWithHandler(handler: handler)
-//            let server = try TCPInternetSocket(address: address)
-//            try server.bind()
-//            try server.listen(queueLimit: 4096)
-//
-//            while true {
-//                let socket = try server.accept()
-//                let client = try TCPClient(alreadyConnectedSocket: socket)
-//                try handler(client: client)
-//            }
-        }
+extension NSStream {
+    func upgradeSSL() -> Bool {
+        return setProperty(NSStreamSocketSecurityLevelNegotiatedSSL, forKey: NSStreamSocketSecurityLevelKey)
+    }
 }
