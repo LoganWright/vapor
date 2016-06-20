@@ -97,7 +97,7 @@ public class Application {
         TODO: Expose to end users to customize driver
         Make outgoing requests
     */
-    public let client: HTTPClientProtocol = HTTPClient<TCPClient>()
+    public let client: HTTPClientProtocol = HTTPClient<FoundationStream>()
 
 
     /**
