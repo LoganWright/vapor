@@ -29,7 +29,11 @@ let package = Package(
         .Package(url: "https://github.com/czechboy0/Socks.git", majorVersion: 0, minor: 6),
 
         // Syntax for easily accessing values from generic data.
-        .Package(url: "https://github.com/qutheory/polymorphic.git", majorVersion: 0, minor: 2)
+        .Package(url: "https://github.com/qutheory/polymorphic.git", majorVersion: 0, minor: 2),
+
+        .Package(url: "https://github.com/IBM-Swift/BlueSocket.git", majorVersion: 0, minor: 5),
+
+        .Package(url: "https://github.com/LoganWright/BlueSSLService.git", majorVersion: 0, minor: 1)
     ],
     exclude: [
         "XcodeProject",

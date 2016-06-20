@@ -1,5 +1,6 @@
 import Vapor
 import libc
+import Socket
 
 var workDir: String {
     let parent = #file.characters.split(separator: "/").map(String.init).dropLast().joined(separator: "/")
@@ -8,8 +9,10 @@ var workDir: String {
 }
 
 let config = Config(seed: JSON.object(["port": "8000"]), workingDirectory: workDir)
-let app = Application(workDir: workDir, config: config)
-let 😀 = HTTPResponse(status: .ok)
+
+let app = Application(workDir: workDir, config: config, server: HTTPServer<BlueStreamDriver, HTTPParser<HTTPRequest>, HTTPSerializer<HTTPResponse>>.self)
+
+let 😀 = Response(status: .ok)
 
 //MARK: Basic
 
@@ -34,9 +37,11 @@ app.get("spotify-artists") { req in
 }
 
 app.get("pokemon") { req in
+
     let limit = req.data["limit"].int ?? 20
     let offset = req.data["offset"].int ?? 0
     let pokemonResponse = try app.client.get("http://pokeapi.co/api/v2/pokemon", query: ["limit": "\(limit)", "offset": "\(offset)"])
+
     guard let names = pokemonResponse.data["results", "name"].array?.flatMap({ $0.string }) else {
         return HTTPResponse(error: "didn't parse json correctly")
     }
