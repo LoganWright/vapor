@@ -1,5 +1,3 @@
-import Strand
-
 extension Application {
     func serve() throws {
         if let servers = config["servers"].object {
@@ -61,7 +59,7 @@ extension Application {
         let info = message.joined(separator: " ")
 
         if runInBackground {
-            _ = try Strand { [weak self] in
+            background { [weak self] in
                 guard let welf = self else {
                     return
                 }

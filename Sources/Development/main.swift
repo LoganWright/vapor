@@ -470,12 +470,13 @@ app.get("chunked") { request in
 }
 
 #if !os(Linux)
+
     /*
     Temporarily not available on Linux because of Dispatch APIs
     */
     app.get("async") { request in
         return try Response.async { promise in
-            _ = try background {
+             background {
                 do {
                     let beyonceQuery = "https://api.spotify.com/v1/search/?q=beyonce&type=artist"
                     let response = try HTTPClient<FoundationStream>.get(beyonceQuery)

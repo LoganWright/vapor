@@ -4,35 +4,32 @@ let package = Package(
     name: "Vapor",
     dependencies: [
         //Standards package. Contains protocols for cross-project compatability.
-        .Package(url: "https://github.com/open-swift/S4.git", majorVersion: 0, minor: 10),
+        .Package(url: "./LocalPackages/S4", Version(0,0,0)),
 
         //Parses and serializes JSON - using fork until update core library
-        .Package(url: "https://github.com/czechboy0/Jay.git", majorVersion: 0, minor: 12),
+        .Package(url: "./LocalPackages/Jay", Version(0,0,0)),
 
         //SHA2 + HMAC hashing. Used by the core to create session identifiers.
-        .Package(url: "https://github.com/CryptoKitten/HMAC.git", majorVersion: 0, minor: 8),
-        .Package(url: "https://github.com/CryptoKitten/SHA2.git", majorVersion: 0, minor: 8),
+        .Package(url: "./LocalPackages/HMAC", Version(0,0,0)),
+        .Package(url: "./LocalPackages/SHA2", Version(0,0,0)),
 
         //Websockets
-        .Package(url: "https://github.com/CryptoKitten/SHA1.git", majorVersion: 0, minor: 8),
+        .Package(url: "./LocalPackages/SHA1", Version(0,0,0)),
 
         //ORM for interacting with databases
-        .Package(url: "https://github.com/qutheory/fluent.git", majorVersion: 0, minor: 7),
+        .Package(url: "./LocalPackages/Fluent", Version(0,0,0)),
 
         //Allows complex key path subscripts
-        .Package(url: "https://github.com/qutheory/path-indexable.git", majorVersion: 0, minor: 2),
-
-        //Wrapper around pthreads
-        .Package(url: "https://github.com/ketzusaka/Strand.git", majorVersion: 1, minor: 5),
+        .Package(url: "./LocalPackages/PathIndexable", Version(0,0,0)),
 
         //Sockets, used by the built in HTTP server
-        .Package(url: "https://github.com/czechboy0/Socks.git", majorVersion: 0, minor: 8),
+        .Package(url: "./LocalPackages/Socks", Version(0,0,0)),
 
         // Syntax for easily accessing values from generic data.
-        .Package(url: "https://github.com/qutheory/polymorphic.git", majorVersion: 0, minor: 2),
+        .Package(url: "./LocalPackages/Polymorphic", Version(0,0,0)),
 
         // libc
-        .Package(url: "https://github.com/qutheory/libc.git", majorVersion: 0, minor: 1)
+        .Package(url: "./LocalPackages/libc", Version(0,0,0)),
     ],
     exclude: [
         "XcodeProject",

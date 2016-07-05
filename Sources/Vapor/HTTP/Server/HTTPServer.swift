@@ -4,7 +4,8 @@
     import Darwin
 #endif
 
-import Strand
+import Foundation
+
 import Socks
 import SocksCore
 
@@ -22,6 +23,8 @@ public final class HTTPServer<
     public let host: String
     public let port: Int
     public let securityLayer: SecurityLayer
+
+    private let queue = DispatchQueue(label: "server-queue")
 
     public init(host: String = "0.0.0.0", port: Int = 8080, securityLayer: SecurityLayer = .none) throws {
         self.host = host
@@ -47,16 +50,12 @@ public final class HTTPServer<
                 continue
             }
 
-            do {
-                _ = try Strand {
-                    do {
-                        try self.respond(stream: stream, responder: responder)
-                    } catch {
-                        errors(.dispatch(error))
-                    }
+            queue.async {
+                do {
+                    try self.respond(stream: stream, responder: responder)
+                } catch {
+                    errors(.dispatch(error))
                 }
-            } catch {
-                errors(.dispatch(error))
             }
         }
     }

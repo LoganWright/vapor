@@ -42,7 +42,7 @@ class PromiseTests: XCTestCase {
         array.append(1)
         let result: Int = try Promise.async { promise in
             array.append(2)
-            _ = try background {
+            background {
                 sleep(1)
                 array.append(4)
                 promise.resolve(with: 42)
@@ -62,7 +62,7 @@ class PromiseTests: XCTestCase {
             array.append(1)
             let _ = try Promise<Int>.async { promise in
                 array.append(2)
-                _ = try background {
+                background {
                     sleep(1)
                     array.append(4)
                     promise.reject(with: PromiseTestError.someError)

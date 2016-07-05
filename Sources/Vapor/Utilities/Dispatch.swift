@@ -1,7 +1,9 @@
-import Strand
+
+import Foundation
 
 public typealias Block = () -> Void
 
-public func background(function: Block) throws {
-    let _ = try Strand(closure: function)
+let background = DispatchQueue(label: "vapor-background-queue")
+public func background(function: Block) {
+    background.async(execute: function)
 }

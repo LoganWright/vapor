@@ -1,7 +1,6 @@
 import libc
 import Foundation
 import Socks
-import Strand
 
 public let VERSION = "0.12"
 
