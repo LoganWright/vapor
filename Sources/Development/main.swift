@@ -23,7 +23,7 @@ app.get { request in
 
 app.get("client-socket") { req in
     // TODO: Find way to support multiple applications while still having concrete reference to host / port. This will only work on one application ...
-    let host = app.config["servers", 0, "host"].string ?? "localhost"
+    let host = app.config["servers", 0, "host"].string ?? "0.0.0.0"
     let port = app.config["servers", 0, "port"].int ?? 80
     
     _ = try? WebSocket.background(to: "ws://\(host):\(port)/server-socket-responder") { (ws) in

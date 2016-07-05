@@ -1,7 +1,6 @@
 import libc
 import Foundation
 import Socks
-import Strand
 
 public let VERSION = "0.12"
 
@@ -240,6 +239,11 @@ public class Application {
     }
 
     func serverErrors(error: ServerError) {
+        if case let .dispatch(inner) = error,
+            let parserError = inner as? HTTPParserError
+            where parserError == .streamEmpty {
+            return
+        }
         log.error("Server error: \(error)")
     }
 }
